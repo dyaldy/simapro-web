@@ -21,8 +21,25 @@ const DataPelanggan = () => {
             });
     }, []);
 
-    const handleDelete = (customerName) => {
-        alert(`Apakah Anda yakin ingin menghapus ${customerName}?`);
+    const handleDelete = (productName, productId) => {
+        const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus produk "${productName}"?`);
+        if (confirmDelete) {
+            fetch(`https://sazura.xyz/api/v1/products/${productId}`, {
+                method: 'DELETE',
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Gagal menghapus produk");
+                }
+                // Hapus item dari state data
+                setData((prevData) => prevData.filter((item) => item.id !== productId));
+                alert("Produk berhasil dihapus!");
+            })
+            .catch((error) => {
+                console.error("Error saat menghapus:", error);
+                alert("Terjadi kesalahan saat menghapus produk");
+            });
+        }
     };
 
     if (loading) return <p>Loading data...</p>;
@@ -75,8 +92,8 @@ const DataPelanggan = () => {
                             </td>
                             <td>
                                 <FaTrash 
-                                    className="icon delete"
-                                    onClick={() => handleDelete(item.name)}
+                                        className="icon delete"
+                                        onClick={() => handleDelete(item.name, item.id)}
                                 />
                             </td>
                         </tr>
