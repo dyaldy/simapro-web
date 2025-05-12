@@ -1,0 +1,103 @@
+.profile-container {
+  background-color: #a184e3;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 900px; /* Lebarkan kontainer */
+  width: 100%;        /* Responsif pada berbagai ukuran layar */
+  margin: auto;
+  text-align: center;
+  font-family: sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-title {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: left;
+  color: #000;
+}
+
+.profile-image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 30px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.upload-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.custom-file-upload {
+  background-color: #5f2c82;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+.file-name {
+  background-color: #ccc;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+.form-group {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: #d9d9d9;
+  font-size: 14px;
+}
+
+.button-group {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.logout-button {
+  background-color: #5f2c82;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.save-button {
+  background-color: #f3aafc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}

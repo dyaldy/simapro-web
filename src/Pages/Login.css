@@ -1,0 +1,114 @@
+.login-container {
+    display: flex;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .login-left {
+    flex: 1;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+  }
+  
+  .login-left img.logo {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .login-left h1 {
+    font-size: 36px;
+    color: #7c3aed;
+    margin-top: 10px;
+  }
+  
+  .login-right {
+    flex: 1;
+    background-color: #8F87F1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 50px;
+    color: white;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+  }
+  
+  .login-right h2 {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center; /* Ini yang membuat teks ke tengah */
+  }
+  
+  .login-right p {
+    margin-bottom: 50px;
+    text-align: center; /* Agar paragraf juga ke tengah */
+    font-weight: bold;
+  }
+  
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #e5e5e5;
+    color: black;
+  }
+  
+  .forgot-password {
+    text-align: right;
+    margin-top: -15px;
+    margin-bottom: 20px;
+  }
+  
+  .forgot-password a {
+    color: #1e1b4b;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  
+  button {
+    background-color: #623986;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100px;
+    align-self: center;
+  }
+  
+  .login-left .logo {
+    display: flex;
+    justify-content: flex-start; /* Align to the left */
+    width: 100%; /* Ensure the container takes up full width */
+    padding-left: 90px;
+  }
+  
+  .login-left .logo img {
+    width: 300px; /* Optional: Limit the maximum size */
+    height: auto; /* Maintain the aspect ratio */
+    transition: width 0.3s ease-in-out; /* Smooth resizing transition */
+  }
+
+  button:hover {
+    background-color: #581c87;
+  }
+  
