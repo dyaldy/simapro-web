@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Sidebar from './Components/Sidebar';
+import Dashboard from './Pages/Dashboard';
 import Profile from './Pages/Profile';
 import DataProduk from './Pages/DataProduk';
 import DetailKategori from './Pages/DetailKategori';
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <Profile />,
+      },
+      {
+        path: 'dashboard',
+        element: <Dashboard />,
       },
       {
         path: 'data-produk',

@@ -1,0 +1,68 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafb;
+  }
+  
+  .top-section {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  .info-card {
+    background-color: #a78bfa;
+    flex: 1;
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .info-card p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .info-card h2 {
+    margin-top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .chart-section {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .chart-card {
+    flex: 1 1 45%;
+    background-color: #4f46e5;
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-card p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .chart-card h2 {
+    margin: 5px 0 15px 0;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .chart-wrapper {
+    height: 180px;
+  }
+  
