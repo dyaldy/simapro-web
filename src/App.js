@@ -39,9 +39,10 @@ const router = createBrowserRouter([
         element: <TambahProduk />,
       },
       {
-        path: 'edit-produk', // ✅ tambahkan ini
+        path: 'edit-produk/:id', // ✅ tambahkan ini
         element: <EditProduk />,
       },
+
       {
         path: 'detail-kategori',
         element: <DetailKategori />,
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
       {
         path: 'data-pelanggan',
         element: <DataPelanggan />,
+      },
+      {
+        path: 'edit-pelanggan/:id', // ✅ tambahkan ini
+        element: <EditPelanggan />,
       },
       {
         path: 'tambah-pelanggan', // ✅ tambahkan ini
