@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 
 const Dashboard = () => {
   const [customers, setCustomers] = useState([]);
@@ -68,18 +70,80 @@ const Dashboard = () => {
 
       <div className="chart-section">
         <div className="chart-card">
-          <p>Total Penjualan selama 3 bulan:</p>
+          <p>Total Produk stock terbanyak :</p>
           <h2>{topProduct.amount} Pcs</h2>
           <div className="chart-wrapper">
-            <Bar data={productChart} options={{ maintainAspectRatio: false }} />
+            <Bar 
+                data={productChart}
+                options={{
+                    maintainAspectRatio: false,
+                    plugins: {
+                    datalabels: {
+                        color: 'white',
+                        anchor: 'end',
+                        align: 'start',
+                        font: {
+                        weight: 'bold'
+                        },
+                        formatter: Math.round
+                    },
+                    legend: {
+                        labels: {
+                        color: 'white'
+                        }
+                    }
+                    },
+                    scales: {
+                    x: {
+                        ticks: { color: 'white' }
+                    },
+                    y: {
+                        ticks: { color: 'white' }
+                    }
+                    }
+                }}
+                plugins={[ChartDataLabels]} 
+                />
+
           </div>
         </div>
 
         <div className="chart-card">
-          <p>Berangkat selama 3 bulan:</p>
-          <h2>{customerCount[topCustomer] || 0} Hari</h2>
+          <p>Kedatangan:</p>
+          <h2>{customerCount[topCustomer] || 0} Kali</h2>
           <div className="chart-wrapper">
-            <Bar data={customerChart} options={{ maintainAspectRatio: false }} />
+          <Bar 
+            data={customerChart}
+            options={{
+                maintainAspectRatio: false,
+                plugins: {
+                datalabels: {
+                    color: 'white',
+                    anchor: 'end',
+                    align: 'start',
+                    font: {
+                    weight: 'bold'
+                    },
+                    formatter: Math.round
+                },
+                legend: {
+                    labels: {
+                    color: 'white'
+                    }
+                }
+                },
+                scales: {
+                x: {
+                    ticks: { color: 'white' }
+                },
+                y: {
+                    ticks: { color: 'white' }
+                }
+                }
+            }}
+            plugins={[ChartDataLabels]} 
+            />
+
           </div>
         </div>
       </div>

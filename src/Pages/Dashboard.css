@@ -27,6 +27,7 @@
     margin: 0;
     font-size: 14px;
     font-weight: 500;
+    
   }
   
   .info-card h2 {
@@ -43,7 +44,7 @@
   
   .chart-card {
     flex: 1 1 45%;
-    background-color: #4f46e5;
+    background-color: #623986;
     padding: 20px;
     border-radius: 20px;
     color: white;
@@ -65,4 +66,5 @@
   .chart-wrapper {
     height: 180px;
   }
+
   
