@@ -18,6 +18,7 @@ const Sidebar = () => {
           <div className="admin-info">
             <span className="admin-role">ADMIN</span>
             <span className="admin-email">{user.name}</span>
+            <span className="admin-email">{user.email}</span>
           </div>
         </NavLink>
 
