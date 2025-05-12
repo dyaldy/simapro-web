@@ -61,7 +61,7 @@ const Dashboard = () => {
           <h2>{topProduct.name}</h2>
         </div>
         <div className="info-card">
-          <p>Staff paling rajin</p>
+          <p>Pelanggan paling sering Datang :</p>
           <h2>{topCustomer}</h2>
         </div>
       </div>
