@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     // Belum ada logika autentikasi, langsung pindah halaman
-    navigate('/data-produk');
+    navigate('/dashboard');
   };
 
   return (
