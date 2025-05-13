@@ -32,7 +32,8 @@
   }
   
   .add-kategori-form {
-    background-color: #ede9fe;
+    background-color: #8F87F1;
+    color: white;
     padding: 20px;
     border-radius: 16px;
     margin-bottom: 20px;
@@ -43,10 +44,12 @@
     color: black;
     margin-bottom: 16px;
     font-size: 20px;
+
   }
   
   .form-group {
     margin-bottom: 16px;
+    background-color: #8F87F1;
   }
   
   .form-group label {
