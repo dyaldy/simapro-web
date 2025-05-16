@@ -59,11 +59,11 @@ const DetailPenjualan = () => {
                         {Array.isArray(data) && data.map((item, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>{item.customer_id}</td>
+                                <td>{item.customerId}</td>
                                 <td>{item.amount}</td>
                                 <td>{item.status}</td>
-                                <td>{item.billed_date}</td>
-                                <td>{item.paid_date}</td>
+                                <td>{item.billedDate}</td>
+                                <td>{item.paidDate}</td>
                                 <td><FaTrash className="icon delete" /></td>
                             </tr>
                         ))}

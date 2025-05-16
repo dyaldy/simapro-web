@@ -12,7 +12,9 @@ const DataProduk = () => {
         fetch("https://sazura.xyz/api/v1/products")
             .then((response) => response.json())
             .then((json) => {
-                setData(json.data || []); // Pastikan sesuai struktur JSON dari API
+                setData(json.data || []);
+                
+                // Pastikan sesuai struktur JSON dari API
                 setLoading(false);
             })
             .catch((error) => {
