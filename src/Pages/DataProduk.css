@@ -123,3 +123,15 @@ button {
         padding: 8px 10px;
     }
 }
+
+
+/* Status styling */
+.status-aktif {
+    color: #27ae60; /* hijau */
+    font-weight: bold;
+}
+
+.status-nonaktif {
+    color: #c0392b; /* merah */
+    font-weight: bold;
+}

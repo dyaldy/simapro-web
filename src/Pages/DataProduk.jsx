@@ -13,8 +13,6 @@ const DataProduk = () => {
             .then((response) => response.json())
             .then((json) => {
                 setData(json.data || []);
-                
-                // Pastikan sesuai struktur JSON dari API
                 setLoading(false);
             })
             .catch((error) => {
@@ -33,7 +31,6 @@ const DataProduk = () => {
                 if (!response.ok) {
                     throw new Error("Gagal menghapus produk");
                 }
-                // Hapus item dari state data
                 setData((prevData) => prevData.filter((item) => item.id !== productId));
                 alert("Produk berhasil dihapus!");
             })
@@ -43,7 +40,6 @@ const DataProduk = () => {
             });
         }
     };
-    
 
     if (loading) return <p>Loading data...</p>;
 
@@ -86,7 +82,11 @@ const DataProduk = () => {
                                 <td>{item.name}</td>
                                 <td>{item.amount}</td>
                                 <td>{item.price ? `Rp ${parseInt(item.price).toLocaleString('id-ID')}` : 'Rp 0'}</td>
-                                <td>{item.status || '-'}</td>
+                                <td>
+                                    <span className={item.status === 'a' ? 'status-aktif' : item.status === 'n' ? 'status-nonaktif' : ''}>
+                                        {item.status === 'a' ? 'Aktif' : item.status === 'n' ? 'Nonaktif' : item.status || '-'}
+                                    </span>
+                                </td>
                                 <td>{item.categoryId || '-'}</td>
                                 <td>
                                     <FaEdit 
@@ -95,11 +95,10 @@ const DataProduk = () => {
                                     />
                                 </td>
                                 <td>
-                                <FaTrash 
+                                    <FaTrash 
                                         className="icon delete"
                                         onClick={() => handleDelete(item.name, item.id)}
-                                />
-
+                                    />
                                 </td>
                             </tr>
                         ))}
