@@ -6,10 +6,13 @@ import { useNavigate } from 'react-router-dom';
 const DetailPenjualan = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         fetchInvoices();
+        fetchCustomers();
     }, []);
 
     const fetchInvoices = async () => {
@@ -17,11 +20,21 @@ const DetailPenjualan = () => {
         try {
             const response = await fetch('https://sazura.xyz/api/v1/invoices');
             const result = await response.json();
-            setData(result.data);
+            setData(result.data || []);
         } catch (error) {
             console.error("Gagal mengambil data invoice:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchCustomers = async () => {
+        try {
+            const response = await fetch('https://sazura.xyz/api/v1/customers');
+            const result = await response.json();
+            setCustomers(result.data || []);
+        } catch (error) {
+            console.error("Gagal mengambil data pelanggan:", error);
         }
     };
 
@@ -77,17 +90,34 @@ const DetailPenjualan = () => {
         }
     };
 
+    const getCustomerName = (customerId) => {
+        const customer = customers.find(c => Number(c.id) === Number(customerId));
+        return customer ? customer.name : 'Tidak Diketahui';
+    };
+
+    const filteredData = data
+        .filter(item =>
+            getCustomerName(item.customerId).toLowerCase().includes(search.toLowerCase())
+        )
+        .sort((a, b) => {
+            const nameA = getCustomerName(a.customerId).toLowerCase();
+            const nameB = getCustomerName(b.customerId).toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
     return (
         <div className='container'>
             <h1>INVOICE</h1>
 
             <div className="top-bar">
-                <input 
-                    type="text" 
-                    placeholder="Ketikkan Produk..." 
-                    className="search-input" 
+                <input
+                    type="text"
+                    placeholder="Cari Nama Pelanggan..."
+                    className="search-input"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                 />
-                <FaPlusSquare 
+                <FaPlusSquare
                     className="icon plus-icon"
                     onClick={() => navigate("/tambah-penjualan")}
                 />
@@ -99,7 +129,8 @@ const DetailPenjualan = () => {
                 <table className="data-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>NOMOR</th>
+                            <th>NAMA PELANGGAN</th>
                             <th>ID PELANGGAN</th>
                             <th>JUMLAH</th>
                             <th>STATUS</th>
@@ -109,9 +140,10 @@ const DetailPenjualan = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.isArray(data) && data.map((item, index) => (
+                        {filteredData.map((item, index) => (
                             <tr key={item.id || index}>
                                 <td>{index + 1}</td>
+                                <td>{getCustomerName(item.customerId)}</td>
                                 <td>{item.customerId}</td>
                                 <td>{item.amount}</td>
                                 <td>

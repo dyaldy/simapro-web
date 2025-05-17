@@ -7,12 +7,13 @@ const DataPelanggan = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         fetch("https://sazura.xyz/api/v1/customers")
             .then((response) => response.json())
             .then((json) => {
-                setData(json.data || []); // Pastikan sesuai struktur JSON dari API
+                setData(json.data || []);
                 setLoading(false);
             })
             .catch((error) => {
@@ -21,26 +22,32 @@ const DataPelanggan = () => {
             });
     }, []);
 
-    const handleDelete = (productName, productId) => {
-        const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus produk "${productName}"?`);
+    const handleDelete = (name, id) => {
+        const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus pelanggan "${name}"?`);
         if (confirmDelete) {
-            fetch(`https://sazura.xyz/api/v1/products/${productId}`, {
+            fetch(`https://sazura.xyz/api/v1/customers/${id}`, {
                 method: 'DELETE',
             })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error("Gagal menghapus produk");
+                    throw new Error("Gagal menghapus pelanggan");
                 }
-                // Hapus item dari state data
-                setData((prevData) => prevData.filter((item) => item.id !== productId));
-                alert("Produk berhasil dihapus!");
+                setData((prevData) => prevData.filter((item) => item.id !== id));
+                alert("Pelanggan berhasil dihapus!");
             })
             .catch((error) => {
                 console.error("Error saat menghapus:", error);
-                alert("Terjadi kesalahan saat menghapus produk");
+                alert("Terjadi kesalahan saat menghapus pelanggan");
             });
         }
     };
+
+    const filteredData = data
+        .filter(item => 
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.email.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));
 
     if (loading) return <p>Loading data...</p>;
 
@@ -53,6 +60,8 @@ const DataPelanggan = () => {
                     type="text" 
                     placeholder="Cari Pelanggan..." 
                     className="search-input" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <FaPlusSquare 
                     className="icon plus-icon"
@@ -63,7 +72,7 @@ const DataPelanggan = () => {
             <table className="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>Nomor</th>
                         <th>Nama</th>
                         <th>Tipe</th>
                         <th>Email</th>
@@ -75,11 +84,11 @@ const DataPelanggan = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((item) => (
+                    {filteredData.map((item, index) => (
                         <tr key={item.id}>
-                            <td>{item.id}</td>
+                            <td>{index + 1}</td>
                             <td>{item.name}</td>
-                            <td>{item.type}</td>
+                            <td>{item.type === 'B' ? 'Business' : item.type === 'I' ? 'Individu' : item.type}</td>
                             <td>{item.email}</td>
                             <td>{item.address}</td>
                             <td>{item.city}</td>
@@ -92,8 +101,8 @@ const DataPelanggan = () => {
                             </td>
                             <td>
                                 <FaTrash 
-                                        className="icon delete"
-                                        onClick={() => handleDelete(item.name, item.id)}
+                                    className="icon delete"
+                                    onClick={() => handleDelete(item.name, item.id)}
                                 />
                             </td>
                         </tr>
