@@ -105,4 +105,20 @@
     font-weight: 500;
     margin-bottom: 4px;
   }
-  
+  /* DetailKategori.css */
+
+.type-individu {
+  color: #007bff; /* biru */
+  font-weight: bold;
+}
+
+.type-business {
+  color: #28a745; /* hijau */
+  font-weight: bold;
+}
+
+/* Tambahan opsional untuk tampilan tabel */
+.data-table td, .data-table th {
+  padding: 8px;
+  text-align: left;
+}

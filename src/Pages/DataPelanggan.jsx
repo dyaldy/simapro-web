@@ -1,3 +1,4 @@
+// DataPelanggan.jsx
 import "./DetailKategori.css";
 import { FaEdit, FaPlusSquare, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -88,7 +89,9 @@ const DataPelanggan = () => {
                         <tr key={item.id}>
                             <td>{index + 1}</td>
                             <td>{item.name}</td>
-                            <td>{item.type === 'B' ? 'Business' : item.type === 'I' ? 'Individu' : item.type}</td>
+                            <td className={item.type === 'I' ? 'type-individu' : item.type === 'B' ? 'type-business' : ''}>
+                                {item.type === 'B' ? 'Business' : item.type === 'I' ? 'Individu' : item.type}
+                            </td>
                             <td>{item.email}</td>
                             <td>{item.address}</td>
                             <td>{item.city}</td>
