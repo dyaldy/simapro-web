@@ -7,6 +7,7 @@ const DataProduk = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         fetch("https://sazura.xyz/api/v1/products")
@@ -41,6 +42,10 @@ const DataProduk = () => {
         }
     };
 
+    const filteredData = data
+        .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        .sort((a, b) => a.name.localeCompare(b.name)); // Urutkan berdasarkan nama
+
     if (loading) return <p>Loading data...</p>;
 
     return (
@@ -52,6 +57,8 @@ const DataProduk = () => {
                     type="text" 
                     placeholder="Cari Produk..." 
                     className="search-input" 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <FaPlusSquare 
                     className="icon plus-icon"
@@ -59,51 +66,51 @@ const DataProduk = () => {
                 />
             </div>
 
-            {data.length === 0 ? (
-                <p>Tidak ada data produk</p>
+            {filteredData.length === 0 ? (
+                <p>Tidak ada data produk yang sesuai</p>
             ) : (
-                <table className="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama Produk</th>
-                            <th>Stok</th>
-                            <th>Harga</th>
-                            <th>Status</th>
-                            <th>Kategori ID</th>
-                            <th>Edit</th>
-                            <th>Hapus</th>
+            <table className="data-table">
+                <thead>
+                    <tr>
+                        <th>Nomor</th> {/* Ganti dari ID */}
+                        <th>Nama Produk</th>
+                        <th>Stok</th>
+                        <th>Harga</th>
+                        <th>Status</th>
+                        <th>Kategori ID</th>
+                        <th>Edit</th>
+                        <th>Hapus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredData.map((item, index) => (
+                        <tr key={item.id}>
+                            <td>{index + 1}</td> {/* Ganti dari item.id */}
+                            <td>{item.name}</td>
+                            <td>{item.amount}</td>
+                            <td>{item.price ? `Rp ${parseInt(item.price).toLocaleString('id-ID')}` : 'Rp 0'}</td>
+                            <td>
+                                <span className={item.status === 'a' ? 'status-aktif' : item.status === 'n' ? 'status-nonaktif' : ''}>
+                                    {item.status === 'a' ? 'Aktif' : item.status === 'n' ? 'Nonaktif' : item.status || '-'}
+                                </span>
+                            </td>
+                            <td>{item.categoryId || '-'}</td>
+                            <td>
+                                <FaEdit 
+                                    className="icon edit"
+                                    onClick={() => navigate(`/edit-produk/${item.id}`)}
+                                />
+                            </td>
+                            <td>
+                                <FaTrash 
+                                    className="icon delete"
+                                    onClick={() => handleDelete(item.name, item.id)}
+                                />
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {data.map((item) => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.name}</td>
-                                <td>{item.amount}</td>
-                                <td>{item.price ? `Rp ${parseInt(item.price).toLocaleString('id-ID')}` : 'Rp 0'}</td>
-                                <td>
-                                    <span className={item.status === 'a' ? 'status-aktif' : item.status === 'n' ? 'status-nonaktif' : ''}>
-                                        {item.status === 'a' ? 'Aktif' : item.status === 'n' ? 'Nonaktif' : item.status || '-'}
-                                    </span>
-                                </td>
-                                <td>{item.categoryId || '-'}</td>
-                                <td>
-                                    <FaEdit 
-                                        className="icon edit"
-                                        onClick={() => navigate(`/edit-produk/${item.id}`)}
-                                    />
-                                </td>
-                                <td>
-                                    <FaTrash 
-                                        className="icon delete"
-                                        onClick={() => handleDelete(item.name, item.id)}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                    ))}
+                </tbody>
+            </table>
             )}
         </div>
     );
