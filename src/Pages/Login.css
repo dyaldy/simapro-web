@@ -112,3 +112,10 @@
     background-color: #581c87;
   }
   
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    margin-bottom: 8px;
+  }
+  
