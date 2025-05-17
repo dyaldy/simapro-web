@@ -4,8 +4,8 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({
-    name: 'Aldy',
-    email: 'Aldy@gmail.com',
+    name: 'nama',
+    email: 'email@gmail.com',
     image: 'img.jpg'
   });
 
