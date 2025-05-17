@@ -31,6 +31,7 @@ const TambahPenjualan = () => {
     fetchCustomers();
   }, []);
 
+  // Validasi format tanggal: YYYY-MM-DD HH:mm:ss
   const isValidDateTime = (str) => {
     return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str);
   };
@@ -48,7 +49,7 @@ const TambahPenjualan = () => {
       return;
     }
 
-    if (status === "L") {
+    if (status === "P") {
       if (!paidDate || !isValidDateTime(paidDate)) {
         alert("Tanggal Pembayaran harus diisi dan format harus benar jika status Lunas.");
         return;
@@ -58,12 +59,14 @@ const TambahPenjualan = () => {
     const newInvoice = [
       {
         customerId,
-        amount,
+        amount: Number(amount),
         status,
         billedDate,
-        paidDate: status === "P" ? paidDate : "B",
+        paidDate: status === "P" ? paidDate : null,
       },
     ];
+
+    console.log("Kirim data invoice:", newInvoice);
 
     try {
       const res = await fetch("https://sazura.xyz/api/v1/invoices/bulk", {
@@ -94,7 +97,11 @@ const TambahPenjualan = () => {
       {!loading && !error && (
         <form onSubmit={handleSubmit}>
           <label>Pilih Pelanggan :</label>
-          <select value={customerId} onChange={(e) => setCustomerId(e.target.value)}>
+          <select
+            value={customerId}
+            onChange={(e) => setCustomerId(e.target.value)}
+            required
+          >
             <option value="">-- Pilih Pelanggan --</option>
             {customers.map((cust) => (
               <option key={cust.id} value={cust.id}>
@@ -109,6 +116,8 @@ const TambahPenjualan = () => {
             placeholder="Masukan Jumlah..."
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            required
+            min={1}
           />
 
           <label>Status :</label>
@@ -120,6 +129,7 @@ const TambahPenjualan = () => {
                 value="P"
                 checked={status === "P"}
                 onChange={(e) => setStatus(e.target.value)}
+                required
               />
               Lunas
             </label>
@@ -141,6 +151,7 @@ const TambahPenjualan = () => {
             placeholder="YYYY-MM-DD HH:mm:ss"
             value={billedDate}
             onChange={(e) => setBilledDate(e.target.value)}
+            required
           />
 
           <label>Tanggal Pembayaran :</label>
@@ -149,6 +160,8 @@ const TambahPenjualan = () => {
             placeholder="YYYY-MM-DD HH:mm:ss"
             value={paidDate}
             onChange={(e) => setPaidDate(e.target.value)}
+            disabled={status !== "P"}
+            required={status === "P"}
           />
 
           <div className="button-group">
