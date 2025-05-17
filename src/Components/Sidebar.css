@@ -47,7 +47,7 @@
     padding: 8px 10px;
     width: 80%;
     margin-bottom: 20px;
-    background-color: white;
+    background-color: #a170cc;
 
   }
   
@@ -69,7 +69,7 @@
   .admin-box .admin-role {
     font-size: 0.75rem;
     font-weight: bold;
-    color: black;
+    color: white;
   }
 
   .admin-box {
@@ -91,7 +91,7 @@
   .admin-box .admin-email {
     font-size: 0.75rem;
     font-weight: bold;
-    color: black;
+    color: white;
   }
   
   /* Sidebar menu */
