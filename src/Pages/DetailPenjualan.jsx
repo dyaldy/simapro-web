@@ -122,12 +122,12 @@ const DetailPenjualan = () => {
                                                 onChange={() => handleStatusChange(item)}
                                                 style={{ marginRight: '5px' }}
                                             />
-                                            B
+                                            Belum Lunas
                                         </label>
                                     ) : (
                                         <span style={{ color: 'green', fontWeight: 'bold' }}>
                                             <FaCheck style={{ marginRight: '5px' }} />
-                                            P
+                                            Lunas
                                         </span>
                                     )}
                                 </td>
