@@ -80,8 +80,7 @@ const DataPelanggan = () => {
                         <th>Alamat</th>
                         <th>Kota</th>
                         <th>Kode Pos</th>
-                        <th>Edit</th>
-                        <th>Hapus</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,8 +100,6 @@ const DataPelanggan = () => {
                                     className="icon edit"
                                     onClick={() => navigate(`/edit-pelanggan/${item.id}`)}
                                 />
-                            </td>
-                            <td>
                                 <FaTrash 
                                     className="icon delete"
                                     onClick={() => handleDelete(item.name, item.id)}

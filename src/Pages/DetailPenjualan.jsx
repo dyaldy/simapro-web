@@ -131,7 +131,6 @@ const DetailPenjualan = () => {
                         <tr>
                             <th>NOMOR</th>
                             <th>NAMA PELANGGAN</th>
-                            <th>ID PELANGGAN</th>
                             <th>JUMLAH</th>
                             <th>STATUS</th>
                             <th>TANGGAL TAGIHAN</th>
@@ -144,7 +143,6 @@ const DetailPenjualan = () => {
                             <tr key={item.id || index}>
                                 <td>{index + 1}</td>
                                 <td>{getCustomerName(item.customerId)}</td>
-                                <td>{item.customerId}</td>
                                 <td>{item.amount}</td>
                                 <td>
                                     {item.status === 'B' ? (

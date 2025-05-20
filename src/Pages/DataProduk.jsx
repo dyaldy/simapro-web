@@ -39,7 +39,6 @@ const DataProduk = () => {
   };
 
   const getCategoryName = (categoryId) => {
-    // Sesuaikan key category_id di kategori API
     const category = categories.find(
       (cat) => Number(cat.category_id) === Number(categoryId)
     );
@@ -69,15 +68,9 @@ const DataProduk = () => {
 
   const filteredData = data
     .filter((item) =>
-      getCategoryName(item.categoryId)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .sort((a, b) =>
-      getCategoryName(a.categoryId)
-        .toLowerCase()
-        .localeCompare(getCategoryName(b.categoryId).toLowerCase())
-    );
+    .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
   return (
     <div className="container">
@@ -86,7 +79,7 @@ const DataProduk = () => {
       <div className="top-bar">
         <input
           type="text"
-          placeholder="Cari Kategori..."
+          placeholder="Cari Nama Produk..."
           className="search-input"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -110,9 +103,7 @@ const DataProduk = () => {
               <th>Harga</th>
               <th>Status</th>
               <th>Nama Kategori</th>
-              <th>ID Kategori</th>
-              <th>Edit</th>
-              <th>Hapus</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -149,15 +140,13 @@ const DataProduk = () => {
                       : item.status || "-"}
                   </td>
                   <td>{getCategoryName(item.categoryId)}</td>
-                  <td>{item.categoryId}</td>
                   <td>
                     <FaEdit
                       className="icon edit"
                       onClick={() => navigate(`/edit-produk/${item.id}`)}
                       title="Edit Produk"
+                      style={{ marginRight: "10px" }} // jarak antara ikon
                     />
-                  </td>
-                  <td>
                     <FaTrash
                       className="icon delete"
                       onClick={() => handleDelete(item.name, item.id)}
