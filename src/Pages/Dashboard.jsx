@@ -4,21 +4,43 @@ import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-
 const Dashboard = () => {
   const [customers, setCustomers] = useState([]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetch('https://sazura.xyz/api/v1/customers')
-      .then(res => res.json())
-      .then(data => setCustomers(Array.isArray(data.data) ? data.data : []))
-      .catch(err => console.error('Error fetching customers:', err));
+    const token = localStorage.getItem('token');
 
-    fetch('https://sazura.xyz/api/v1/products')
-      .then(res => res.json())
-      .then(data => setProducts(Array.isArray(data.data) ? data.data : []))
-      .catch(err => console.error('Error fetching products:', err));
+    if (!token) {
+      console.error('Token tidak ditemukan. Silakan login ulang.');
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        const customerRes = await fetch('https://sazura.xyz/api/v1/customers', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
+        });
+        const customerData = await customerRes.json();
+        setCustomers(Array.isArray(customerData.data) ? customerData.data : []);
+
+        const productRes = await fetch('https://sazura.xyz/api/v1/products', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/json',
+          },
+        });
+        const productData = await productRes.json();
+        setProducts(Array.isArray(productData.data) ? productData.data : []);
+      } catch (error) {
+        console.error('Gagal memuat data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   // Hitung pelanggan teraktif
@@ -73,38 +95,37 @@ const Dashboard = () => {
           <p>Total Produk stock terbanyak :</p>
           <h2>{topProduct.amount} Pcs</h2>
           <div className="chart-wrapper">
-            <Bar 
-                data={productChart}
-                options={{
-                    maintainAspectRatio: false,
-                    plugins: {
-                    datalabels: {
-                        color: 'white',
-                        anchor: 'end',
-                        align: 'start',
-                        font: {
-                        weight: 'bold'
-                        },
-                        formatter: Math.round
+            <Bar
+              data={productChart}
+              options={{
+                maintainAspectRatio: false,
+                plugins: {
+                  datalabels: {
+                    color: 'white',
+                    anchor: 'end',
+                    align: 'start',
+                    font: {
+                      weight: 'bold',
                     },
-                    legend: {
-                        labels: {
-                        color: 'white'
-                        }
-                    }
+                    formatter: Math.round,
+                  },
+                  legend: {
+                    labels: {
+                      color: 'white',
                     },
-                    scales: {
-                    x: {
-                        ticks: { color: 'white' }
-                    },
-                    y: {
-                        ticks: { color: 'white' }
-                    }
-                    }
-                }}
-                plugins={[ChartDataLabels]} 
-                />
-
+                  },
+                },
+                scales: {
+                  x: {
+                    ticks: { color: 'white' },
+                  },
+                  y: {
+                    ticks: { color: 'white' },
+                  },
+                },
+              }}
+              plugins={[ChartDataLabels]}
+            />
           </div>
         </div>
 
@@ -112,38 +133,37 @@ const Dashboard = () => {
           <p>Kedatangan:</p>
           <h2>{customerCount[topCustomer] || 0} Kali</h2>
           <div className="chart-wrapper">
-          <Bar 
-            data={customerChart}
-            options={{
+            <Bar
+              data={customerChart}
+              options={{
                 maintainAspectRatio: false,
                 plugins: {
-                datalabels: {
+                  datalabels: {
                     color: 'white',
                     anchor: 'end',
                     align: 'start',
                     font: {
-                    weight: 'bold'
+                      weight: 'bold',
                     },
-                    formatter: Math.round
-                },
-                legend: {
+                    formatter: Math.round,
+                  },
+                  legend: {
                     labels: {
-                    color: 'white'
-                    }
-                }
+                      color: 'white',
+                    },
+                  },
                 },
                 scales: {
-                x: {
-                    ticks: { color: 'white' }
+                  x: {
+                    ticks: { color: 'white' },
+                  },
+                  y: {
+                    ticks: { color: 'white' },
+                  },
                 },
-                y: {
-                    ticks: { color: 'white' }
-                }
-                }
-            }}
-            plugins={[ChartDataLabels]} 
+              }}
+              plugins={[ChartDataLabels]}
             />
-
           </div>
         </div>
       </div>

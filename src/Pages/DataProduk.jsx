@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./DataProduk.css";
 import { FaEdit, FaPlusSquare, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -9,16 +9,17 @@ const DataProduk = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    fetchProducts();
-    fetchCategories();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch("https://sazura.xyz/api/v1/products");
+      const response = await fetch("https://sazura.xyz/api/v1/products", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
       const json = await response.json();
       setData(json.data || []);
     } catch (error) {
@@ -26,17 +27,27 @@ const DataProduk = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
-      const response = await fetch("https://sazura.xyz/api/v1/categories");
+      const response = await fetch("https://sazura.xyz/api/v1/categories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      });
       const json = await response.json();
       setCategories(json.data || []);
     } catch (error) {
       console.error("Error fetching category data:", error);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
 
   const getCategoryName = (categoryId) => {
     const category = categories.find(
@@ -54,7 +65,13 @@ const DataProduk = () => {
     try {
       const response = await fetch(
         `https://sazura.xyz/api/v1/products/${productId}`,
-        { method: "DELETE" }
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
       );
       if (!response.ok) throw new Error("Gagal menghapus produk");
 
@@ -145,7 +162,7 @@ const DataProduk = () => {
                       className="icon edit"
                       onClick={() => navigate(`/edit-produk/${item.id}`)}
                       title="Edit Produk"
-                      style={{ marginRight: "10px" }} // jarak antara ikon
+                      style={{ marginRight: "10px" }}
                     />
                     <FaTrash
                       className="icon delete"

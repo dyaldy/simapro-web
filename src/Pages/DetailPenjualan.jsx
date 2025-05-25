@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import "./DataProduk.css";
 import { FaPlusSquare, FaTrash, FaCheck } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -12,15 +12,19 @@ const DetailPenjualan = () => {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
 
-    useEffect(() => {
-        fetchInvoices();
-        fetchCustomers();
-    }, []);
+    // Dapatkan token Bearer dari localStorage (atau sumber lain)
+    const token = localStorage.getItem('token') || '';
 
-    const fetchInvoices = async () => {
+    // Fungsi fetchInvoices dengan useCallback agar stabil
+    const fetchInvoices = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch('https://sazura.xyz/api/v1/invoices');
+            const response = await fetch('https://sazura.xyz/api/v1/invoices', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                },
+            });
             const result = await response.json();
             setData(result.data || []);
         } catch (error) {
@@ -28,17 +32,28 @@ const DetailPenjualan = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [token]);
 
-    const fetchCustomers = async () => {
+    // Fungsi fetchCustomers dengan useCallback agar stabil
+    const fetchCustomers = useCallback(async () => {
         try {
-            const response = await fetch('https://sazura.xyz/api/v1/customers');
+            const response = await fetch('https://sazura.xyz/api/v1/customers', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                },
+            });
             const result = await response.json();
             setCustomers(result.data || []);
         } catch (error) {
             console.error("Gagal mengambil data pelanggan:", error);
         }
-    };
+    }, [token]);
+
+    useEffect(() => {
+        fetchInvoices();
+        fetchCustomers();
+    }, [fetchInvoices, fetchCustomers]);
 
     const handleStatusChange = async (item) => {
         const now = new Date();
@@ -54,7 +69,8 @@ const DetailPenjualan = () => {
             const response = await fetch(`https://sazura.xyz/api/v1/invoices/${item.id}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(updatedInvoice)
             });
@@ -79,6 +95,9 @@ const DetailPenjualan = () => {
         try {
             const response = await fetch(`https://sazura.xyz/api/v1/invoices/${id}`, {
                 method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             if (!response.ok) {
@@ -141,6 +160,7 @@ const DetailPenjualan = () => {
                 <FaPlusSquare
                     className="icon plus-icon"
                     onClick={() => navigate("/tambah-penjualan")}
+                    title="Tambah Penjualan"
                 />
                 <button className="download-btn" onClick={exportToExcel}>
                     Unduh Invoice

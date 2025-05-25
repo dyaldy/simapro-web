@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import "./DetailKategori.css";
-
 
 const DetailKategori = () => {
   const [kategoriList, setKategoriList] = useState([]);
@@ -12,18 +11,26 @@ const DetailKategori = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const fetchKategori = async () => {
+  const token = localStorage.getItem('token');
+
+  // Gunakan useCallback supaya fungsi fetchKategori stabil referensinya
+  const fetchKategori = useCallback(async () => {
     try {
-      const res = await axios.get('https://sazura.xyz/api/v1/categories');
+      const res = await axios.get('https://sazura.xyz/api/v1/categories', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        }
+      });
       setKategoriList(res.data.data);
     } catch (error) {
       console.error("Gagal mengambil data kategori:", error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchKategori();
-  }, []);
+  }, [fetchKategori]);  // sekarang dependency sudah lengkap
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +43,7 @@ const DetailKategori = () => {
   const handleAddKategori = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     if (!newKategori.name) {
       alert('Nama kategori wajib diisi');
       setLoading(false);
@@ -44,7 +51,12 @@ const DetailKategori = () => {
     }
 
     try {
-      await axios.post('https://sazura.xyz/api/v1/categories', newKategori);
+      await axios.post('https://sazura.xyz/api/v1/categories', newKategori, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        }
+      });
       alert('Kategori berhasil ditambahkan!');
       setShowAddForm(false);
       setNewKategori({ name: '', description: '' });

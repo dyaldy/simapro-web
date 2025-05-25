@@ -12,6 +12,7 @@ import TambahPelanggan from './Tambah/TambahPelanggan';
 import EditProduk from './Edit/EditProduk';
 import EditPelanggan from './Edit/EditPelanggan';
 import Login from './Pages/Login';
+import Register from './Pages/Register'; // ✅ Tambahan
 
 const router = createBrowserRouter([
   {
@@ -19,8 +20,12 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
+    path: '/register', // ✅ Tambahan
+    element: <Register />,
+  },
+  {
     path: '/',
-    element: <Sidebar />, // sidebar jadi layout utama setelah login
+    element: <Sidebar />,
     children: [
       {
         path: 'profile',
@@ -35,14 +40,13 @@ const router = createBrowserRouter([
         element: <DataProduk />,
       },
       {
-        path: 'tambah-produk', // ✅ tambahkan ini
+        path: 'tambah-produk',
         element: <TambahProduk />,
       },
       {
-        path: 'edit-produk/:id', // ✅ tambahkan ini
+        path: 'edit-produk/:id',
         element: <EditProduk />,
       },
-
       {
         path: 'detail-kategori',
         element: <DetailKategori />,
@@ -52,15 +56,15 @@ const router = createBrowserRouter([
         element: <DataPelanggan />,
       },
       {
-        path: 'edit-pelanggan/:id', // ✅ tambahkan ini
+        path: 'edit-pelanggan/:id',
         element: <EditPelanggan />,
       },
       {
-        path: 'tambah-pelanggan', // ✅ tambahkan ini
+        path: 'tambah-pelanggan',
         element: <TambahPelanggan />,
       },
       {
-        path: 'edit-pelanggan', // ✅ tambahkan ini
+        path: 'edit-pelanggan',
         element: <EditPelanggan />,
       },
       {
@@ -68,19 +72,14 @@ const router = createBrowserRouter([
         element: <DetailPenjualan />,
       },
       {
-        path: 'tambah-penjualan', // ✅ tambahkan ini
+        path: 'tambah-penjualan',
         element: <TambahPenjualan />,
       },
     ],
   },
 ]);
 
-
 function App() {
-
-  // fungsi
-
-  //return beisi route
   return <RouterProvider router={router} />;
 }
 

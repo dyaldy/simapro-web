@@ -1,4 +1,3 @@
-// DataPelanggan.jsx
 import "./DetailKategori.css";
 import { FaEdit, FaPlusSquare, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
@@ -10,8 +9,15 @@ const DataPelanggan = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
 
+    const token = localStorage.getItem("token"); // pastikan token disimpan di localStorage
+
     useEffect(() => {
-        fetch("https://sazura.xyz/api/v1/customers")
+        fetch("https://sazura.xyz/api/v1/customers", {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+            },
+        })
             .then((response) => response.json())
             .then((json) => {
                 setData(json.data || []);
@@ -21,25 +27,29 @@ const DataPelanggan = () => {
                 console.error("Error fetching data:", error);
                 setLoading(false);
             });
-    }, []);
+    }, [token]);
 
     const handleDelete = (name, id) => {
         const confirmDelete = window.confirm(`Apakah Anda yakin ingin menghapus pelanggan "${name}"?`);
         if (confirmDelete) {
             fetch(`https://sazura.xyz/api/v1/customers/${id}`, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                },
             })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Gagal menghapus pelanggan");
-                }
-                setData((prevData) => prevData.filter((item) => item.id !== id));
-                alert("Pelanggan berhasil dihapus!");
-            })
-            .catch((error) => {
-                console.error("Error saat menghapus:", error);
-                alert("Terjadi kesalahan saat menghapus pelanggan");
-            });
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Gagal menghapus pelanggan");
+                    }
+                    setData((prevData) => prevData.filter((item) => item.id !== id));
+                    alert("Pelanggan berhasil dihapus!");
+                })
+                .catch((error) => {
+                    console.error("Error saat menghapus:", error);
+                    alert("Terjadi kesalahan saat menghapus pelanggan");
+                });
         }
     };
 
