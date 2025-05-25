@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import './Sidebar.css';
 import simaproLogo from '../Logo/simapro2.png';
-import { useUser } from '../context/UserContext'; // Import context
 
 const Sidebar = () => {
-  const { user } = useUser(); // Ambil user dari context
+  const [user, setUser] = useState({
+    name: '',
+    email: '',
+    image: '',
+  });
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const userData = JSON.parse(userStr);
+      setUser({
+        name: userData.name || '',
+        email: userData.email || '',
+        image: userData.image || 'https://via.placeholder.com/80', // fallback image
+      });
+    }
+  }, []);
 
   return (
     <div className="app-container">

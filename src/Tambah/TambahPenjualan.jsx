@@ -15,10 +15,17 @@ const TambahPenjualan = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Ambil token Bearer dari localStorage
+  const token = localStorage.getItem("token") || "";
+
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const res = await fetch("https://sazura.xyz/api/v1/customers");
+        const res = await fetch("https://sazura.xyz/api/v1/customers", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!res.ok) throw new Error("Gagal mengambil data pelanggan");
         const json = await res.json();
         setCustomers(json.data || []);
@@ -29,7 +36,7 @@ const TambahPenjualan = () => {
       }
     };
     fetchCustomers();
-  }, []);
+  }, [token]);
 
   // Validasi format tanggal: YYYY-MM-DD HH:mm:ss
   const isValidDateTime = (str) => {
@@ -71,7 +78,10 @@ const TambahPenjualan = () => {
     try {
       const res = await fetch("https://sazura.xyz/api/v1/invoices/bulk", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(newInvoice),
       });
 

@@ -18,6 +18,9 @@ const TambahPelanggan = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Ambil token Bearer dari localStorage
+  const token = localStorage.getItem('token') || '';
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -35,7 +38,11 @@ const TambahPelanggan = () => {
     }
 
     try {
-      await axios.post('https://sazura.xyz/api/v1/customers', form);
+      await axios.post('https://sazura.xyz/api/v1/customers', form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       alert('Pelanggan berhasil ditambahkan!');
       navigate('/data-pelanggan');
     } catch (error) {

@@ -16,11 +16,18 @@ const TambahProduk = () => {
 
   const [categories, setCategories] = useState([]);
 
+  // Ambil token dari localStorage
+  const token = localStorage.getItem("token") || "";
+
   useEffect(() => {
-    // Fetch kategori dari API
+    // Fetch kategori dari API dengan Authorization header
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://sazura.xyz/api/v1/categories");
+        const response = await axios.get("https://sazura.xyz/api/v1/categories", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setCategories(response.data.data || []);
       } catch (error) {
         console.error("Gagal mengambil kategori:", error);
@@ -28,7 +35,7 @@ const TambahProduk = () => {
     };
 
     fetchCategories();
-  }, []);
+  }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +59,16 @@ const TambahProduk = () => {
         status: form.status,
       };
 
-      await axios.post("https://sazura.xyz/api/v1/products/bulk", [productData]);
+      await axios.post(
+        "https://sazura.xyz/api/v1/products/bulk",
+        [productData],
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       alert("Produk berhasil disimpan!");
       navigate("/data-produk");
     } catch (error) {

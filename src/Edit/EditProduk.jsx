@@ -17,8 +17,15 @@ const EditProduk = () => {
 
   const [loading, setLoading] = useState(true);
 
+  // Ambil token Bearer dari localStorage (atau sesuaikan sumber tokenmu)
+  const token = localStorage.getItem('token') || '';
+
   useEffect(() => {
-    axios.get(`https://sazura.xyz/api/v1/products/${id}`)
+    axios.get(`https://sazura.xyz/api/v1/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         const produk = res.data.data;
         setForm({
@@ -35,7 +42,7 @@ const EditProduk = () => {
         alert("Gagal memuat data produk.");
         navigate("/data-produk");
       });
-  }, [id, navigate]);
+  }, [id, navigate, token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,7 +66,11 @@ const EditProduk = () => {
         categoryId: form.categoryId
       };
 
-      await axios.put(`https://sazura.xyz/api/v1/products/${id}`, updatedData);
+      await axios.put(`https://sazura.xyz/api/v1/products/${id}`, updatedData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       alert('Produk berhasil diperbarui!');
       navigate('/data-produk');
     } catch (error) {
@@ -78,6 +89,7 @@ const EditProduk = () => {
     <div className="form-container">
       <h1>EDIT PRODUK</h1>
       <form onSubmit={handleSubmit}>
+        {/* Form inputs tetap sama */}
         <label>Nama Produk :</label>
         <input
           type="text"

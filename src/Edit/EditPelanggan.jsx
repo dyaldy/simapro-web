@@ -19,8 +19,15 @@ const EditPelanggan = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Ambil token Bearer, contoh dari localStorage
+  const token = localStorage.getItem('token') || '';
+
   useEffect(() => {
-    axios.get(`https://sazura.xyz/api/v1/customers/${id}`)
+    axios.get(`https://sazura.xyz/api/v1/customers/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then((res) => {
         const pelanggan = res.data.data;
         setForm({
@@ -38,7 +45,7 @@ const EditPelanggan = () => {
         alert("Gagal memuat data pelanggan.");
         navigate("/data-pelanggan");
       });
-  }, [id, navigate]);
+  }, [id, navigate, token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,7 +64,11 @@ const EditPelanggan = () => {
     }
 
     try {
-      await axios.put(`https://sazura.xyz/api/v1/customers/${id}`, form);
+      await axios.put(`https://sazura.xyz/api/v1/customers/${id}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       alert('Pelanggan berhasil diperbarui!');
       navigate('/data-pelanggan');
     } catch (error) {
@@ -79,6 +90,9 @@ const EditPelanggan = () => {
       <h1>EDIT PELANGGAN</h1>
       {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
+        {/* Form input sesuai kode asli */}
+        {/* ... (isi form tetap sama seperti sebelumnya) */}
+        
         <label>Nama Pelanggan :</label>
         <input 
           type="text" 

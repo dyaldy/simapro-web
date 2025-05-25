@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext'; // Import context
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useUser(); // Ambil dan ubah global state
 
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
-  const [image, setImage] = useState(user.image);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [image, setImage] = useState('');
+
+  useEffect(() => {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setName(user.name || '');
+      setEmail(user.email || '');
+      setImage(user.image || 'https://via.placeholder.com/150'); // fallback image jika user.image kosong
+    }
+  }, []);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -19,8 +27,20 @@ const Profile = () => {
   };
 
   const handleSave = () => {
-    setUser({ name, email, image });
+    // Update user di localStorage juga
+    const userStr = localStorage.getItem('user');
+    let user = {};
+    if (userStr) {
+      user = JSON.parse(userStr);
+    }
+    const updatedUser = { ...user, name, email, image };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
     alert('Profil berhasil disimpan!');
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
   };
 
   return (
@@ -47,7 +67,7 @@ const Profile = () => {
       </div>
 
       <div className="button-group">
-        <button className="logout-button" onClick={() => navigate("/")}>
+        <button className="logout-button" onClick={handleLogout}>
           LogOut
         </button>
         <button className="save-button" onClick={handleSave}>
