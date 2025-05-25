@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import "./DataProduk.css";
 import { FaPlusSquare, FaTrash, FaCheck } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const DetailPenjualan = () => {
     const navigate = useNavigate();
@@ -105,6 +107,25 @@ const DetailPenjualan = () => {
             return nameA.localeCompare(nameB);
         });
 
+    const exportToExcel = () => {
+        const exportData = filteredData.map((item, index) => ({
+            No: index + 1,
+            "Nama Pelanggan": getCustomerName(item.customerId),
+            Jumlah: item.amount,
+            Status: item.status === 'B' ? 'Belum Lunas' : 'Lunas',
+            "Tanggal Tagihan": item.billedDate,
+            "Tanggal Pembayaran": item.paidDate || '-',
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Invoice");
+
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(dataBlob, "Data_Invoice.xlsx");
+    };
+
     return (
         <div className='container'>
             <h1>INVOICE</h1>
@@ -121,6 +142,9 @@ const DetailPenjualan = () => {
                     className="icon plus-icon"
                     onClick={() => navigate("/tambah-penjualan")}
                 />
+                <button className="download-btn" onClick={exportToExcel}>
+                    Unduh Invoice
+                </button>
             </div>
 
             {loading ? (

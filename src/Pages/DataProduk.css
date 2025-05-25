@@ -135,3 +135,19 @@ button {
     color: #c0392b; /* merah */
     font-weight: bold;
 }
+
+.download-btn {
+    margin-left: 10px;
+    padding: 8px 12px;
+    background-color: #ec7ff8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #623986;
+}
