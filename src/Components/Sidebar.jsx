@@ -7,7 +7,6 @@ const Sidebar = () => {
   const [user, setUser] = useState({
     name: '',
     email: '',
-    image: '',
   });
 
   useEffect(() => {
@@ -17,7 +16,6 @@ const Sidebar = () => {
       setUser({
         name: userData.name || '',
         email: userData.email || '',
-        image: userData.image || 'https://via.placeholder.com/80', // fallback image
       });
     }
   }, []);
@@ -29,7 +27,6 @@ const Sidebar = () => {
           <img src={simaproLogo} alt="Simapro Logo" />
         </div>
         <NavLink to="/profile" className="admin-box">
-          <img src={user.image} alt="Admin" />
           <div className="admin-info">
             <span className="admin-role">ADMIN</span>
             <span className="admin-email">{user.name}</span>
