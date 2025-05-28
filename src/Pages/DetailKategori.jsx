@@ -123,7 +123,7 @@ const DetailKategori = () => {
         {Array.isArray(kategoriList) && kategoriList.map((kategori) => (
           <div key={kategori.id} className="kategori-item">
             <div className="kategori-name">KATEGORI: {kategori.name}</div>
-            <div className="kategori-name">ID: {kategori.category_id}</div>
+            <div className="kategori-name">ID: {kategori.id}</div>
           </div>
         ))}
       </div>
