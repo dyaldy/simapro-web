@@ -9,19 +9,28 @@ const DataProduk = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
   const token = localStorage.getItem("token");
 
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (page = 1) => {
     setLoading(true);
     try {
-      const response = await fetch("https://sazura.xyz/api/v1/products", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
+      const response = await fetch(
+        `https://sazura.xyz/api/v1/products?page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        }
+      );
       const json = await response.json();
       setData(json.data || []);
+      setTotalPages(json.meta?.last_page || 1);
+      setTotalItems(json.meta?.total || 0);
     } catch (error) {
       console.error("Error fetching product data:", error);
     } finally {
@@ -45,13 +54,13 @@ const DataProduk = () => {
   }, [token]);
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(currentPage);
     fetchCategories();
-  }, [fetchProducts, fetchCategories]);
+  }, [fetchProducts, fetchCategories, currentPage]);
 
   const getCategoryName = (categoryId) => {
     const category = categories.find(
-      (cat) => Number(cat.category_id) === Number(categoryId)
+      (cat) => Number(cat.id) === Number(categoryId)
     );
     return category ? category.name : "Tidak Diketahui";
   };
@@ -75,19 +84,17 @@ const DataProduk = () => {
       );
       if (!response.ok) throw new Error("Gagal menghapus produk");
 
-      setData((prevData) => prevData.filter((item) => item.id !== productId));
       alert("Produk berhasil dihapus!");
+      fetchProducts(currentPage); // refresh halaman saat ini
     } catch (error) {
       console.error("Error saat menghapus:", error);
       alert("Terjadi kesalahan saat menghapus produk");
     }
   };
 
-  const filteredData = data
-    .filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  const filteredData = data.filter((item) =>
+    item.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="container">
@@ -99,7 +106,9 @@ const DataProduk = () => {
           placeholder="Cari Nama Produk..."
           className="search-input"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
         />
         <FaPlusSquare
           className="icon plus-icon"
@@ -108,73 +117,92 @@ const DataProduk = () => {
         />
       </div>
 
+      <p>Total Produk: {totalItems}</p>
+
       {loading ? (
         <p>Loading data...</p>
       ) : (
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Produk</th>
-              <th>Stok</th>
-              <th>Harga</th>
-              <th>Status</th>
-              <th>Nama Kategori</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.length === 0 ? (
+        <>
+          <table className="data-table">
+            <thead>
               <tr>
-                <td colSpan={9} style={{ textAlign: "center" }}>
-                  Tidak ada data produk yang sesuai
-                </td>
+                <th>No</th>
+                <th>Nama Produk</th>
+                <th>Stok</th>
+                <th>Harga</th>
+                <th>Status</th>
+                <th>Nama Kategori</th>
+                <th>Aksi</th>
               </tr>
-            ) : (
-              filteredData.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>{item.amount}</td>
-                  <td>
-                    {item.price
-                      ? `Rp ${parseInt(item.price).toLocaleString("id-ID")}`
-                      : "Rp 0"}
-                  </td>
-                  <td
-                    className={
-                      item.status === "a"
-                        ? "status-aktif"
-                        : item.status === "n"
-                        ? "status-nonaktif"
-                        : ""
-                    }
-                  >
-                    {item.status === "a"
-                      ? "Aktif"
-                      : item.status === "n"
-                      ? "Nonaktif"
-                      : item.status || "-"}
-                  </td>
-                  <td>{getCategoryName(item.categoryId)}</td>
-                  <td>
-                    <FaEdit
-                      className="icon edit"
-                      onClick={() => navigate(`/edit-produk/${item.id}`)}
-                      title="Edit Produk"
-                      style={{ marginRight: "10px" }}
-                    />
-                    <FaTrash
-                      className="icon delete"
-                      onClick={() => handleDelete(item.name, item.id)}
-                      title="Hapus Produk"
-                    />
+            </thead>
+            <tbody>
+              {filteredData.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: "center" }}>
+                    Tidak ada data produk yang sesuai
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredData.map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>{item.amount}</td>
+                    <td>
+                      {item.price
+                        ? `Rp ${parseInt(item.price).toLocaleString("id-ID")}`
+                        : "Rp 0"}
+                    </td>
+                    <td
+                      className={
+                        item.status === "a"
+                          ? "status-aktif"
+                          : item.status === "n"
+                          ? "status-nonaktif"
+                          : ""
+                      }
+                    >
+                      {item.status === "a"
+                        ? "Aktif"
+                        : item.status === "n"
+                        ? "Nonaktif"
+                        : item.status || "-"}
+                    </td>
+                    <td>{getCategoryName(item.categoryId)}</td>
+                    <td>
+                      <FaEdit
+                        className="icon edit"
+                        onClick={() => navigate(`/edit-produk/${item.id}`)}
+                        title="Edit Produk"
+                        style={{ marginRight: "10px" }}
+                      />
+                      <FaTrash
+                        className="icon delete"
+                        onClick={() => handleDelete(item.name, item.id)}
+                        title="Hapus Produk"
+                      />
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          {/* PAGINATION */}
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                className={`pagination-button ${
+                  currentPage === page ? "active" : ""
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

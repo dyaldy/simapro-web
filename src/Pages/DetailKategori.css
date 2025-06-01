@@ -1,124 +1,108 @@
 .container {
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9fafb;
-  }
-  
-  .header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .header-section h1 {
-    color: black;
-    font-size: 28px;
-  }
-  
-  .btn-add {
-    background-color: #E9A5F1;
-    color: white;
-    border: none;
-    padding: 10px 16px;
-    font-size: 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-add:hover {
-    background-color: #623986;
-  }
-  
-  .add-kategori-form {
-    background-color: #8F87F1;
-    color: white;
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-  }
-  
-  .add-kategori-form h2 {
-    color: black;
-    margin-bottom: 16px;
-    font-size: 20px;
+  padding: 20px;
+}
 
-  }
-  
-  .form-group {
-    margin-bottom: 16px;
-    background-color: #8F87F1;
-  }
-  
-  .form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-    color: #1e293b;
-  }
-  
-  .form-group input,
-  .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #c7d2fe;
-    border-radius: 8px;
-    font-size: 14px;
-    resize: vertical;
-  }
-  
-  .btn-submit {
-    background-color: #E9A5F1;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    font-size: 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-submit:hover {
-    background-color: #623986;
-  }
-  
-  .kategori-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 16px;
-    
-  }
-  
-  .kategori-item {
-    color: white;
-    padding: 16px;
-    border-radius: 16px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    background-color: #623986;
-  }
-  
-  .kategori-name {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-  /* DetailKategori.css */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.type-individu {
-  color: #007bff; /* biru */
+.btn-add {
+  background-color: #e295e2;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination-button {
+  padding: 6px 12px;
+  margin: 0 4px;
+  background-color: #eaeaea;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.pagination-button.active {
+  background-color: #007bff;
+  color: white;
   font-weight: bold;
 }
 
-.type-business {
-  color: #28a745; /* hijau */
-  font-weight: bold;
+
+.add-kategori-form {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  color: black;
 }
 
-/* Tambahan opsional untuk tampilan tabel */
-.data-table td, .data-table th {
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
   padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-submit {
+  background-color: #8242c2;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.kategori-table-wrapper {
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+.kategori-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+
+.kategori-table th,
+.kategori-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
   text-align: left;
+}
+
+.kategori-table th {
+  background-color: #a66dd4;
+  color: white;
+  text-transform: uppercase;
+}
+
+.kategori-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.kategori-table tbody tr:hover {
+  background-color: #f1f1f1;
 }

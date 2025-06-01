@@ -8,8 +8,10 @@ const DataPelanggan = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
-    const token = localStorage.getItem("token"); // pastikan token disimpan di localStorage
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         fetch("https://sazura.xyz/api/v1/customers", {
@@ -40,10 +42,8 @@ const DataPelanggan = () => {
                 },
             })
                 .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Gagal menghapus pelanggan");
-                    }
-                    setData((prevData) => prevData.filter((item) => item.id !== id));
+                    if (!response.ok) throw new Error("Gagal menghapus pelanggan");
+                    setData(prevData => prevData.filter(item => item.id !== id));
                     alert("Pelanggan berhasil dihapus!");
                 })
                 .catch((error) => {
@@ -54,11 +54,18 @@ const DataPelanggan = () => {
     };
 
     const filteredData = data
-        .filter(item => 
+        .filter(item =>
             item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.email.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .sort((a, b) => a.name.localeCompare(b.name));
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+    const goToPage = (page) => setCurrentPage(page);
 
     if (loading) return <p>Loading data...</p>;
 
@@ -72,7 +79,10 @@ const DataPelanggan = () => {
                     placeholder="Cari Pelanggan..." 
                     className="search-input" 
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1); // Reset ke halaman 1 saat mencari
+                    }}
                 />
                 <FaPlusSquare 
                     className="icon plus-icon"
@@ -94,9 +104,9 @@ const DataPelanggan = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredData.map((item, index) => (
+                    {currentItems.map((item, index) => (
                         <tr key={item.id}>
-                            <td>{index + 1}</td>
+                            <td>{indexOfFirstItem + index + 1}</td>
                             <td>{item.name}</td>
                             <td className={item.type === 'I' ? 'type-individu' : item.type === 'B' ? 'type-business' : ''}>
                                 {item.type === 'B' ? 'Business' : item.type === 'I' ? 'Individu' : item.type}
@@ -119,6 +129,19 @@ const DataPelanggan = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* Pagination */}
+            <div className="pagination">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <button 
+                        key={page}
+                        onClick={() => goToPage(page)}
+                        className={`pagination-button ${currentPage === page ? 'active' : ''}`}
+                    >
+                        {page}
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

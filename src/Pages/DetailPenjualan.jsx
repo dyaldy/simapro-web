@@ -9,13 +9,12 @@ const DetailPenjualan = () => {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [customers, setCustomers] = useState([]);
+    const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
 
-    // Dapatkan token Bearer dari localStorage (atau sumber lain)
     const token = localStorage.getItem('token') || '';
 
-    // Fungsi fetchInvoices dengan useCallback agar stabil
     const fetchInvoices = useCallback(async () => {
         setLoading(true);
         try {
@@ -34,7 +33,6 @@ const DetailPenjualan = () => {
         }
     }, [token]);
 
-    // Fungsi fetchCustomers dengan useCallback agar stabil
     const fetchCustomers = useCallback(async () => {
         try {
             const response = await fetch('https://sazura.xyz/api/v1/customers', {
@@ -50,10 +48,26 @@ const DetailPenjualan = () => {
         }
     }, [token]);
 
+    const fetchProducts = useCallback(async () => {
+        try {
+            const response = await fetch('https://sazura.xyz/api/v1/products', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'application/json',
+                },
+            });
+            const result = await response.json();
+            setProducts(result.data || []);
+        } catch (error) {
+            console.error("Gagal mengambil data produk:", error);
+        }
+    }, [token]);
+
     useEffect(() => {
         fetchInvoices();
         fetchCustomers();
-    }, [fetchInvoices, fetchCustomers]);
+        fetchProducts();
+    }, [fetchInvoices, fetchCustomers, fetchProducts]);
 
     const handleStatusChange = async (item) => {
         const now = new Date();
@@ -116,6 +130,11 @@ const DetailPenjualan = () => {
         return customer ? customer.name : 'Tidak Diketahui';
     };
 
+    const getProductName = (productId) => {
+        const product = products.find(p => Number(p.id) === Number(productId));
+        return product ? product.name : 'Tidak Diketahui';
+    };
+
     const filteredData = data
         .filter(item =>
             getCustomerName(item.customerId).toLowerCase().includes(search.toLowerCase())
@@ -130,6 +149,7 @@ const DetailPenjualan = () => {
         const exportData = filteredData.map((item, index) => ({
             No: index + 1,
             "Nama Pelanggan": getCustomerName(item.customerId),
+            "Produk": getProductName(item.productId),
             Jumlah: item.amount,
             Status: item.status === 'B' ? 'Belum Lunas' : 'Lunas',
             "Tanggal Tagihan": item.billedDate,
@@ -175,6 +195,7 @@ const DetailPenjualan = () => {
                         <tr>
                             <th>NOMOR</th>
                             <th>NAMA PELANGGAN</th>
+                            <th>PRODUK</th>
                             <th>JUMLAH</th>
                             <th>STATUS</th>
                             <th>TANGGAL TAGIHAN</th>
@@ -187,6 +208,7 @@ const DetailPenjualan = () => {
                             <tr key={item.id || index}>
                                 <td>{index + 1}</td>
                                 <td>{getCustomerName(item.customerId)}</td>
+                                <td>{getProductName(item.productId)}</td>
                                 <td>{item.amount}</td>
                                 <td>
                                     {item.status === 'B' ? (

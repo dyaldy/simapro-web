@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./TambahProduk.css";
@@ -14,32 +14,14 @@ const TambahProduk = () => {
     categoryId: "",
   });
 
-  const [categories, setCategories] = useState([]);
-
-  // Ambil token dari localStorage
   const token = localStorage.getItem("token") || "";
-
-  useEffect(() => {
-    // Fetch kategori dari API dengan Authorization header
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get("https://sazura.xyz/api/v1/categories", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setCategories(response.data.data || []);
-      } catch (error) {
-        console.error("Gagal mengambil kategori:", error);
-      }
-    };
-
-    fetchCategories();
-  }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -50,21 +32,22 @@ const TambahProduk = () => {
       return;
     }
 
-    try {
-      const productData = {
-        categoryId: form.categoryId,
-        name: form.name,
-        amount: form.amount,
-        price: form.price,
-        status: form.status,
-      };
+    const productData = {
+      categoryId: parseInt(form.categoryId, 10),
+      name: form.name,
+      amount: parseFloat(form.amount),
+      price: parseFloat(form.price),
+      status: form.status,
+    };
 
+    try {
       await axios.post(
         "https://sazura.xyz/api/v1/products/bulk",
         [productData],
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            Accept: "application/json",
           },
         }
       );
@@ -73,11 +56,7 @@ const TambahProduk = () => {
       navigate("/data-produk");
     } catch (error) {
       console.error("Gagal menyimpan produk:", error);
-      if (error.response?.data?.message) {
-        alert(`Gagal: ${error.response.data.message}`);
-      } else {
-        alert("Gagal menyimpan produk.");
-      }
+      alert(`Gagal: ${error.response?.data?.message || "Terjadi kesalahan."}`);
     }
   };
 
@@ -116,31 +95,29 @@ const TambahProduk = () => {
         />
 
         <label>Status :</label>
-        <select name="status" value={form.status} onChange={handleChange} required>
+        <select
+          name="status"
+          value={form.status}
+          onChange={handleChange}
+          required
+        >
           <option value="">-- Pilih Status --</option>
           <option value="a">Aktif</option>
           <option value="n">Nonaktif</option>
         </select>
 
-        <label>Kategori :</label>
-        <select
+        <label>ID Kategori :</label>
+        <input
+          type="number"
           name="categoryId"
+          placeholder="Masukkan ID Kategori..."
           value={form.categoryId}
           onChange={handleChange}
           required
-        >
-          <option value="">-- Pilih Kategori --</option>
-          {categories.map((cat) => (
-            <option key={cat.category_id} value={cat.category_id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+        />
 
         <div className="button-group">
-          <button type="submit" className="btn simpan">
-            Simpan
-          </button>
+          <button type="submit" className="btn simpan">Simpan</button>
           <button
             type="button"
             className="btn batal"
