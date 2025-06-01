@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./TambahProduk.css";
 
@@ -20,26 +20,18 @@ const TambahPenjualan = () => {
   const token = localStorage.getItem("token") || "";
 
   useEffect(() => {
-    // Jika token kosong, redirect ke login
     if (!token) {
       alert("Anda harus login terlebih dahulu.");
       navigate("/login");
       return;
     }
 
-    console.log("Token:", token);
-
     const fetchCustomers = async () => {
       try {
         const res = await fetch("https://sazura.xyz/api/v1/customers", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
-        if (!res.ok) {
-          if (res.status === 401) throw new Error("Unauthorized: Anda tidak memiliki akses.");
-          throw new Error("Gagal mengambil data pelanggan");
-        }
+        if (!res.ok) throw new Error("Gagal mengambil data pelanggan");
         const json = await res.json();
         setCustomers(json.data || []);
       } catch (err) {
@@ -57,10 +49,7 @@ const TambahPenjualan = () => {
             Accept: "application/json",
           },
         });
-        if (!res.ok) {
-          if (res.status === 401) throw new Error("Unauthorized: Anda tidak memiliki akses.");
-          throw new Error("Gagal mengambil data produk");
-        }
+        if (!res.ok) throw new Error("Gagal mengambil data produk");
         const json = await res.json();
         setProducts(json.data || []);
       } catch (err) {
@@ -89,36 +78,39 @@ const TambahPenjualan = () => {
       return;
     }
 
+    let finalPaidDate = paidDate;
     if (status === "P") {
       if (!paidDate || !isValidDateTime(paidDate)) {
         alert("Tanggal Pembayaran harus diisi dan format harus benar jika status Lunas.");
         return;
       }
+    } else {
+      finalPaidDate = "1970-01-01 00:00:00";
     }
 
-    const newInvoice = {
+    const invoice = [{
       customerId,
       productId,
-      amount: Number(amount),
-      status,
+      amount: amount.toString(),
+      status: status.toUpperCase(), // "P" atau "B"
       billedDate,
-      paidDate: status === "P" ? paidDate : "",
-    };
+      paidDate: finalPaidDate,
+    }];
 
     try {
-      const res = await fetch("https://sazura.xyz/api/v1/invoices", {
+      const res = await fetch("https://sazura.xyz/api/v1/invoices/bulk", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(newInvoice),
+        body: JSON.stringify(invoice),
       });
 
       if (!res.ok) {
         if (res.status === 401) {
-          alert("Unauthorized: Token Anda tidak valid atau sudah kadaluarsa. Silakan login ulang.");
+          alert("Unauthorized: Token tidak valid. Silakan login ulang.");
           navigate("/login");
           return;
         }
@@ -126,10 +118,10 @@ const TambahPenjualan = () => {
         throw new Error(`Gagal mengirim data: ${errText}`);
       }
 
-      alert("Invoice berhasil dibuat dan dikirim ke server");
+      alert("Invoice berhasil dikirim.");
       navigate("/detail-penjualan");
     } catch (err) {
-      alert("Terjadi kesalahan saat mengirim data: " + err.message);
+      alert("Terjadi kesalahan: " + err.message);
     }
   };
 
