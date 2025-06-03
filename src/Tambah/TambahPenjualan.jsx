@@ -61,8 +61,15 @@ const TambahPenjualan = () => {
     fetchProducts();
   }, [token, navigate]);
 
-  const isValidDateTime = (str) => {
-    return /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(str);
+  const formatDateTime = (input) => {
+    const date = new Date(input);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const hh = String(date.getHours()).padStart(2, '0');
+    const mi = String(date.getMinutes()).padStart(2, '0');
+    const ss = String(date.getSeconds()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
   };
 
   const handleSubmit = async (e) => {
@@ -73,27 +80,21 @@ const TambahPenjualan = () => {
       return;
     }
 
-    if (!isValidDateTime(billedDate)) {
-      alert("Format Tanggal Tagihan salah. Gunakan format: YYYY-MM-DD HH:mm:ss");
-      return;
-    }
-
-    let finalPaidDate = paidDate;
+    let finalPaidDate = "1970-01-01 00:00:00";
     if (status === "P") {
-      if (!paidDate || !isValidDateTime(paidDate)) {
-        alert("Tanggal Pembayaran harus diisi dan format harus benar jika status Lunas.");
+      if (!paidDate) {
+        alert("Tanggal Pembayaran harus diisi jika status Lunas.");
         return;
       }
-    } else {
-      finalPaidDate = "1970-01-01 00:00:00";
+      finalPaidDate = formatDateTime(paidDate);
     }
 
     const invoice = [{
       customerId,
       productId,
       amount: amount.toString(),
-      status: status.toUpperCase(), // "P" atau "B"
-      billedDate,
+      status: status.toUpperCase(),
+      billedDate: formatDateTime(billedDate),
       paidDate: finalPaidDate,
     }];
 
@@ -191,8 +192,7 @@ const TambahPenjualan = () => {
 
           <label>Tanggal Tagihan :</label>
           <input
-            type="text"
-            placeholder="YYYY-MM-DD HH:mm:ss"
+            type="datetime-local"
             value={billedDate}
             onChange={(e) => setBilledDate(e.target.value)}
             required
@@ -200,8 +200,7 @@ const TambahPenjualan = () => {
 
           <label>Tanggal Pembayaran :</label>
           <input
-            type="text"
-            placeholder="YYYY-MM-DD HH:mm:ss"
+            type="datetime-local"
             value={paidDate}
             onChange={(e) => setPaidDate(e.target.value)}
             disabled={status !== "P"}

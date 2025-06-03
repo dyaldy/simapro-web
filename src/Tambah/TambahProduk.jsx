@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./TambahProduk.css";
@@ -14,7 +14,25 @@ const TambahProduk = () => {
     categoryId: "",
   });
 
+  const [categories, setCategories] = useState([]); // ✅ State untuk menyimpan kategori
   const token = localStorage.getItem("token") || "";
+
+  // ✅ Ambil data kategori dari API
+  useEffect(() => {
+    axios
+      .get("https://sazura.xyz/api/v1/categories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      })
+      .then((response) => {
+        setCategories(response.data.data || []);
+      })
+      .catch((error) => {
+        console.error("Gagal mengambil kategori:", error);
+      });
+  }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,15 +124,20 @@ const TambahProduk = () => {
           <option value="n">Nonaktif</option>
         </select>
 
-        <label>ID Kategori :</label>
-        <input
-          type="number"
+        <label>Kategori :</label>
+        <select
           name="categoryId"
-          placeholder="Masukkan ID Kategori..."
           value={form.categoryId}
           onChange={handleChange}
           required
-        />
+        >
+          <option value="">-- Pilih Kategori --</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name} (ID: {cat.id})
+            </option>
+          ))}
+        </select>
 
         <div className="button-group">
           <button type="submit" className="btn simpan">Simpan</button>

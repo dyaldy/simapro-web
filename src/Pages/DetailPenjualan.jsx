@@ -12,13 +12,16 @@ const DetailPenjualan = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
 
     const token = localStorage.getItem('token') || '';
 
-    const fetchInvoices = useCallback(async () => {
+    const fetchInvoices = useCallback(async (page = 1) => {
         setLoading(true);
         try {
-            const response = await fetch('https://sazura.xyz/api/v1/invoices', {
+            const response = await fetch(`https://sazura.xyz/api/v1/invoices?page=${page}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     Accept: 'application/json',
@@ -26,6 +29,8 @@ const DetailPenjualan = () => {
             });
             const result = await response.json();
             setData(result.data || []);
+            setTotalPages(result.meta?.last_page || 1);
+            setTotalItems(result.meta?.total || 0);
         } catch (error) {
             console.error("Gagal mengambil data invoice:", error);
         } finally {
@@ -64,12 +69,14 @@ const DetailPenjualan = () => {
     }, [token]);
 
     useEffect(() => {
-        fetchInvoices();
+        fetchInvoices(currentPage);
         fetchCustomers();
         fetchProducts();
-    }, [fetchInvoices, fetchCustomers, fetchProducts]);
+    }, [fetchInvoices, fetchCustomers, fetchProducts, currentPage]);
 
     const handleStatusChange = async (item) => {
+        if (item.status === 'P') return;
+
         const now = new Date();
         const formattedDate = now.toISOString().slice(0, 19).replace('T', ' ');
 
@@ -94,7 +101,9 @@ const DetailPenjualan = () => {
             }
 
             setData(prevData =>
-                prevData.map(d => (d.id === item.id ? { ...d, status: 'P', paidDate: formattedDate } : d))
+                prevData.map(d =>
+                    d.id === item.id ? { ...d, status: 'P', paidDate: formattedDate } : d
+                )
             );
         } catch (error) {
             alert("Gagal menyimpan perubahan ke server.");
@@ -118,7 +127,7 @@ const DetailPenjualan = () => {
                 throw new Error("Gagal menghapus invoice.");
             }
 
-            setData(prevData => prevData.filter(item => item.id !== id));
+            fetchInvoices(currentPage); // Refresh data
         } catch (error) {
             alert("Gagal menghapus invoice.");
             console.error(error);
@@ -135,15 +144,9 @@ const DetailPenjualan = () => {
         return product ? product.name : 'Tidak Diketahui';
     };
 
-    const filteredData = data
-        .filter(item =>
-            getCustomerName(item.customerId).toLowerCase().includes(search.toLowerCase())
-        )
-        .sort((a, b) => {
-            const nameA = getCustomerName(a.customerId).toLowerCase();
-            const nameB = getCustomerName(b.customerId).toLowerCase();
-            return nameA.localeCompare(nameB);
-        });
+    const filteredData = data.filter(item =>
+        getCustomerName(item.customerId).toLowerCase().includes(search.toLowerCase())
+    );
 
     const exportToExcel = () => {
         const exportData = filteredData.map((item, index) => ({
@@ -153,7 +156,7 @@ const DetailPenjualan = () => {
             Jumlah: item.amount,
             Status: item.status === 'B' ? 'Belum Lunas' : 'Lunas',
             "Tanggal Tagihan": item.billedDate,
-            "Tanggal Pembayaran": item.paidDate || '-',
+            "Tanggal Pembayaran": item.status === 'P' && item.paidDate ? item.paidDate : '-',
         }));
 
         const worksheet = XLSX.utils.json_to_sheet(exportData);
@@ -187,59 +190,83 @@ const DetailPenjualan = () => {
                 </button>
             </div>
 
+            <p>Total Invoice: {totalItems}</p>
+
             {loading ? (
                 <p>Loading data...</p>
             ) : (
-                <table className="data-table">
-                    <thead>
-                        <tr>
-                            <th>NOMOR</th>
-                            <th>NAMA PELANGGAN</th>
-                            <th>PRODUK</th>
-                            <th>JUMLAH</th>
-                            <th>STATUS</th>
-                            <th>TANGGAL TAGIHAN</th>
-                            <th>TANGGAL PEMBAYARAN</th>
-                            <th>HAPUS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredData.map((item, index) => (
-                            <tr key={item.id || index}>
-                                <td>{index + 1}</td>
-                                <td>{getCustomerName(item.customerId)}</td>
-                                <td>{getProductName(item.productId)}</td>
-                                <td>{item.amount}</td>
-                                <td>
-                                    {item.status === 'B' ? (
-                                        <label style={{ color: 'red', fontWeight: 'bold' }}>
-                                            <input
-                                                type="checkbox"
-                                                onChange={() => handleStatusChange(item)}
-                                                style={{ marginRight: '5px' }}
-                                            />
-                                            Belum Lunas
-                                        </label>
-                                    ) : (
-                                        <span style={{ color: 'green', fontWeight: 'bold' }}>
-                                            <FaCheck style={{ marginRight: '5px' }} />
-                                            Lunas
-                                        </span>
-                                    )}
-                                </td>
-                                <td>{item.billedDate}</td>
-                                <td>{item.paidDate || '-'}</td>
-                                <td>
-                                    <FaTrash
-                                        className="icon delete"
-                                        onClick={() => handleDelete(item.id)}
-                                        title="Hapus invoice"
-                                    />
-                                </td>
+                <>
+                    <table className="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Produk</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                                <th>Tanggal Tagihan</th>
+                                <th>Tanggal Pembayaran</th>
+                                <th>Hapus</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {filteredData.length === 0 ? (
+                                <tr>
+                                    <td colSpan={8} style={{ textAlign: 'center' }}>
+                                        Tidak ada data invoice yang sesuai
+                                    </td>
+                                </tr>
+                            ) : (
+                                filteredData.map((item, index) => (
+                                    <tr key={item.id || index}>
+                                        <td>{(currentPage - 1) * 10 + index + 1}</td>
+                                        <td>{getCustomerName(item.customerId)}</td>
+                                        <td>{getProductName(item.productId)}</td>
+                                        <td>{item.amount}</td>
+                                        <td>
+                                            {item.status === 'B' ? (
+                                                <label style={{ color: 'red', fontWeight: 'bold' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        onChange={() => handleStatusChange(item)}
+                                                        style={{ marginRight: '5px' }}
+                                                    />
+                                                    Belum Lunas
+                                                </label>
+                                            ) : (
+                                                <span style={{ color: 'green', fontWeight: 'bold' }}>
+                                                    <FaCheck style={{ marginRight: '5px' }} />
+                                                    Lunas
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td>{item.billedDate}</td>
+                                        <td>{item.status === 'P' && item.paidDate ? item.paidDate : '-'}</td>
+                                        <td>
+                                            <FaTrash
+                                                className="icon delete"
+                                                onClick={() => handleDelete(item.id)}
+                                                title="Hapus invoice"
+                                            />
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+
+                    <div className="pagination">
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`pagination-button ${currentPage === page ? 'active' : ''}`}
+                            >
+                                {page}
+                            </button>
                         ))}
-                    </tbody>
-                </table>
+                    </div>
+                </>
             )}
         </div>
     );

@@ -1,4 +1,4 @@
-import "./DetailKategori.css";
+import "./DetailKategori.css"; 
 import { FaEdit, FaPlusSquare, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ const DataPelanggan = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 15; // ✅ Ganti ke 15 per halaman
 
     const token = localStorage.getItem("token");
 
@@ -20,15 +20,15 @@ const DataPelanggan = () => {
                 'Accept': 'application/json',
             },
         })
-            .then((response) => response.json())
-            .then((json) => {
-                setData(json.data || []);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            });
+        .then((response) => response.json())
+        .then((json) => {
+            setData(json.data || []);
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
+        });
     }, [token]);
 
     const handleDelete = (name, id) => {
@@ -41,15 +41,15 @@ const DataPelanggan = () => {
                     'Accept': 'application/json',
                 },
             })
-                .then((response) => {
-                    if (!response.ok) throw new Error("Gagal menghapus pelanggan");
-                    setData(prevData => prevData.filter(item => item.id !== id));
-                    alert("Pelanggan berhasil dihapus!");
-                })
-                .catch((error) => {
-                    console.error("Error saat menghapus:", error);
-                    alert("Terjadi kesalahan saat menghapus pelanggan");
-                });
+            .then((response) => {
+                if (!response.ok) throw new Error("Gagal menghapus pelanggan");
+                setData(prevData => prevData.filter(item => item.id !== id));
+                alert("Pelanggan berhasil dihapus!");
+            })
+            .catch((error) => {
+                console.error("Error saat menghapus:", error);
+                alert("Terjadi kesalahan saat menghapus pelanggan");
+            });
         }
     };
 
@@ -106,7 +106,7 @@ const DataPelanggan = () => {
                 <tbody>
                     {currentItems.map((item, index) => (
                         <tr key={item.id}>
-                            <td>{indexOfFirstItem + index + 1}</td>
+                            <td>{indexOfFirstItem + index + 1}</td> {/* ✅ Nomor urut global */}
                             <td>{item.name}</td>
                             <td className={item.type === 'I' ? 'type-individu' : item.type === 'B' ? 'type-business' : ''}>
                                 {item.type === 'B' ? 'Business' : item.type === 'I' ? 'Individu' : item.type}
@@ -129,6 +129,11 @@ const DataPelanggan = () => {
                     ))}
                 </tbody>
             </table>
+
+            {/* Info halaman dan total data */}
+            <p className="info-halaman">
+                Halaman {currentPage} dari {totalPages} | Total data: {filteredData.length}
+            </p>
 
             {/* Pagination */}
             <div className="pagination">
