@@ -148,24 +148,49 @@ const DetailPenjualan = () => {
         getCustomerName(item.customerId).toLowerCase().includes(search.toLowerCase())
     );
 
-    const exportToExcel = () => {
-        const exportData = filteredData.map((item, index) => ({
-            No: index + 1,
-            "Nama Pelanggan": getCustomerName(item.customerId),
-            "Produk": getProductName(item.productId),
-            Jumlah: item.amount,
-            Status: item.status === 'B' ? 'Belum Lunas' : 'Lunas',
-            "Tanggal Tagihan": item.billedDate,
-            "Tanggal Pembayaran": item.status === 'P' && item.paidDate ? item.paidDate : '-',
-        }));
+    const exportToExcel = async () => {
+        try {
+            let allData = [];
+            let page = 1;
+            let lastPage = 1;
 
-        const worksheet = XLSX.utils.json_to_sheet(exportData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Invoice");
+            do {
+                const response = await fetch(`https://sazura.xyz/api/v1/invoices?page=${page}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/json',
+                    },
+                });
 
-        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
-        saveAs(dataBlob, "Data_Invoice.xlsx");
+                const result = await response.json();
+                const pageData = result.data || [];
+                lastPage = result.meta?.last_page || 1;
+
+                allData = [...allData, ...pageData];
+                page++;
+            } while (page <= lastPage);
+
+            const exportData = allData.map((item, index) => ({
+                No: index + 1,
+                "Nama Pelanggan": getCustomerName(item.customerId),
+                "Produk": getProductName(item.productId),
+                Jumlah: item.amount,
+                Status: item.status === 'B' ? 'Belum Lunas' : 'Lunas',
+                "Tanggal Tagihan": item.billedDate,
+                "Tanggal Pembayaran": item.status === 'P' && item.paidDate ? item.paidDate : '-',
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Invoice");
+
+            const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+            const dataBlob = new Blob([excelBuffer], { type: "application/octet-stream" });
+            saveAs(dataBlob, "Data_Invoice.xlsx");
+        } catch (error) {
+            console.error("Gagal mengunduh semua data:", error);
+            alert("Terjadi kesalahan saat mengunduh data.");
+        }
     };
 
     return (
