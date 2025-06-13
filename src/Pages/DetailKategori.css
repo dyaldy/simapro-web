@@ -26,14 +26,14 @@
 .pagination-button {
   padding: 6px 12px;
   margin: 0 4px;
-  background-color: #eaeaea;
+  background-color: #e295e2;
   border: 1px solid #ccc;
   cursor: pointer;
   border-radius: 4px;
 }
 
 .pagination-button.active {
-  background-color: #007bff;
+  background-color: #8242c2;
   color: white;
   font-weight: bold;
 }
@@ -99,11 +99,5 @@
   text-transform: uppercase;
 }
 
-.kategori-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
 
-.kategori-table tbody tr:hover {
-  background-color: #623986; /* Warna latar belakang saat hover */
-  color: white; /* Warna teks saat hover */
-}
+
