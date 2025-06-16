@@ -1,4 +1,43 @@
-/* General styling */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .sidebar-menu a {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  .admin-box {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+}@media (max-width: 768px) {
+  .form-container {
+    padding: 10px;
+  }
+
+  form {
+    flex-direction: column;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 14px;
+  }
+}/* General styling */
 * {
     margin: 0;
     padding: 0;
@@ -39,17 +78,113 @@
   
   /* Admin Info */
   .admin-box {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: transparent;
-    border-radius: 20px;
-    padding: 8px 10px;
-    width: 80%;
-    margin-bottom: 20px;
-    background-color: #a170cc;
-
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      background-color: transparent;
+      border-radius: 20px;
+      padding: 8px 10px;
+      width: 80%;
+      margin-bottom: 20px;
+      background-color: #a170cc;
   }
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .header-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-add {
+    width: 100%;
+    text-align: center;
+  }
+
+  .kategori-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .kategori-table th,
+  .kategori-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .top-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chart-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .chart-card {
+    flex: 1 1 100%;
+  }
+}
+  
+  @media (max-width: 768px) {
+    .login-container {
+      flex-direction: column;
+    }
+  
+    .login-left,
+    .login-right {
+      flex: none;
+      width: 100%;
+      border-radius: 0;
+    }
+  
+    .login-right {
+      padding: 20px;
+    }
+  
+    h2 {
+      font-size: 36px;
+    }
+  
+    p {
+      font-size: 14px;
+    }
+  }
+
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .profile-title {
+    font-size: 20px;
+  }
+
+  .form-group input {
+    font-size: 12px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
   
   
   .admin-box img {
