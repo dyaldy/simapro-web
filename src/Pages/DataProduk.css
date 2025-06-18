@@ -5,137 +5,121 @@
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: white;
-}
-.top-bar {
+  }
+  
+  .top-bar {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     margin-bottom: 20px;
     gap: 10px;
-}
-
-.search-input {
+    flex-wrap: wrap;
+  }
+  
+  .search-input {
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 250px;
     color: black;
-}
-
-.plus-icon {
+  }
+  
+  .plus-icon {
     color: #623986;
     font-size: 2rem;
     cursor: pointer;
-}
-
-h1 {
+  }
+  
+  h1 {
     color: #2c3e50;
     font-weight: bold;
     font-size: 30px;
-    text-align: left; /* Pastikan ini ada */
-    margin-bottom: 20px; /* Opsional: beri jarak dari elemen bawahnya */
-}
-
-table {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  table {
     width: 100%;
     border-collapse: collapse;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
     color: black;
-}
-
-thead {
+  }
+  
+  thead {
     background-color: #8F87F1;
     color: black;
-}
-
-th,
-td {
+  }
+  
+  th,
+  td {
     padding: 12px 15px;
     text-align: left;
-}
-
-th {
+  }
+  
+  th {
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.9em;
-}
-
-tbody tr:nth-of-type(even) {
-    background-color: #DEDBFF; /* Biru muda */
-}
-
-tbody tr:nth-of-type(odd) {
-    background-color: #FAD0FF; /* Pink muda */
-}
-
-tbody tr {
+  }
+  
+  tbody tr:nth-of-type(even) {
+    background-color: #DEDBFF;
+  }
+  
+  tbody tr:nth-of-type(odd) {
+    background-color: #FAD0FF;
+  }
+  
+  tbody tr {
     border-bottom: 1px solid #dddddd;
-}
-
-tbody tr:nth-of-type(even) {
-    background-color: #f8f9fa;
-}
-
-tbody tr:last-of-type {
+  }
+  
+  tbody tr:last-of-type {
     border-bottom: 2px solid #3498db;
-}
-
-tbody tr:hover {
+  }
+  
+  tbody tr:hover {
     background-color: #a170cc;
     color: white;
-}
-
-button {
+  }
+  
+  button {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9em;
     transition: all 0.3s ease;
-}
-
-.icon {
+  }
+  
+  .icon {
     font-size: 35px;
     cursor: pointer;
     margin-bottom: 21px;
-}
-
-
-.edit {
+  }
+  
+  .edit {
     color: #623986;
-}
-
-.delete {
+  }
+  
+  .delete {
     color: #623986;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    table {
-        display: block;
-        overflow-x: auto;
-    }
-
-    th,
-    td {
-        padding: 8px 10px;
-    }
-}
-
-
-/* Status styling */
-.status-aktif {
-    color: #27ae60; /* hijau */
+  }
+  
+  /* Status styling */
+  .status-aktif {
+    color: #27ae60;
     font-weight: bold;
-}
-
-.status-nonaktif {
-    color: #c0392b; /* merah */
+  }
+  
+  .status-nonaktif {
+    color: #c0392b;
     font-weight: bold;
-}
-.pagination {
+  }
+  
+  .pagination {
     margin-top: 20px;
     text-align: center;
   }
@@ -155,7 +139,7 @@ button {
     font-weight: bold;
   }
   
-.download-btn {
+  .download-btn {
     margin-left: 10px;
     padding: 8px 12px;
     background-color: #ec7ff8;
@@ -165,8 +149,62 @@ button {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.download-btn:hover {
+  }
+  
+  .download-btn:hover {
     background-color: #623986;
-}
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .top-bar {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 10px;
+    }
+  
+    .search-input {
+      width: 100%;
+    }
+  
+    .download-btn {
+      width: 100%;
+      margin-left: 0;
+    }
+  
+    table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    th,
+    td {
+      padding: 8px 10px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+  
+    h1 {
+      font-size: 24px;
+      text-align: center;
+    }
+  
+    .icon {
+      font-size: 28px;
+      margin: 10px 0;
+      text-align: center;
+    }
+  
+    .pagination-button {
+      padding: 5px 8px;
+      font-size: 14px;
+    }
+  
+    .pagination {
+      margin-top: 15px;
+    }
+  }
+  

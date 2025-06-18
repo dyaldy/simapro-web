@@ -6,6 +6,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .btn-add {
@@ -37,7 +39,6 @@
   color: white;
   font-weight: bold;
 }
-
 
 .add-kategori-form {
   margin-top: 20px;
@@ -100,5 +101,42 @@
   text-transform: uppercase;
 }
 
+/* === RESPONSIVE UNTUK LAYAR HP === */
+@media (max-width: 768px) {
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
+  .btn-add {
+    width: 100%;
+    text-align: center;
+  }
 
+  .pagination-button {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    text-align: center;
+  }
+
+  .kategori-table {
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 14px;
+  }
+
+  .kategori-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .container {
+    padding: 10px;
+  }
+}

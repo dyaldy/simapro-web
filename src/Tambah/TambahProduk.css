@@ -1,81 +1,117 @@
 .form-container {
-    padding: 20px;
-    background-color: #948ae7;
-    min-height: 80px;
-    color: #000;
+  padding: 20px;
+  background-color: #948ae7;
+  min-height: 80px;
+  color: #000;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 10px;
+  color: white;
+}
+
+input,
+textarea,
+select {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 5px;
+  background-color: #d8d8d8;
+  resize: none;
+}
+
+textarea {
+  height: 100px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.simpan {
+  background-color: #623f81;
+  color: white;
+}
+
+.batal {
+  background-color: #f1a9f2;
+  color: white;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* ========== RESPONSIVE FOR MOBILE ========== */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 15px;
   }
-  
+
   h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
   }
-  
-  form {
-    display: flex;
+
+  .form-row {
     flex-direction: column;
+    gap: 1rem;
   }
-  
-  label {
-    font-weight: bold;
-    margin-top: 10px;
-    color: white;
-  }
-  
-  input,
-  textarea,select {
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    margin-top: 5px;
-    background-color: #d8d8d8;
-    resize: none;
-  }
-  
-  textarea {
-    height: 100px;
-  }
-  
+
   .button-group {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+    flex-direction: column;
+    align-items: stretch;
     gap: 10px;
   }
-  
+
   .btn {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
+    width: 100%;
+    text-align: center;
   }
-  
-  .simpan {
-    background-color: #623f81;
-    color: white;
+
+  input,
+  textarea,
+  select {
+    font-size: 14px;
   }
-  
-  .batal {
-    background-color: #f1a9f2;
-    color: white;
-  }
-  .form-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    align-items: flex-start;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .radio-group {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.5rem;
-  }
-  
+}
