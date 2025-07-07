@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import './Sidebar.css';
-import simaproLogo from '../Logo/simapro2.png';
+import simaproLogo from '../Logo/simapro2.png'; // Ganti path jika perlu
 
 const Sidebar = () => {
   const [user, setUser] = useState({ name: '', email: '' });
@@ -30,10 +30,12 @@ const Sidebar = () => {
 
   return (
     <div className="app-container">
+      {/* Hamburger Button */}
       <button className="hamburger" onClick={() => setIsOpen(!isOpen)}>
         &#9776;
       </button>
 
+      {/* Sidebar */}
       <div ref={sidebarRef} className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="logo">
           <img src={simaproLogo} alt="Simapro Logo" />
@@ -61,6 +63,7 @@ const Sidebar = () => {
       {/* Overlay */}
       {isOpen && <div className="sidebar-overlay" onClick={() => setIsOpen(false)}></div>}
 
+      {/* Main Content */}
       <div className="main-content">
         <Outlet />
       </div>

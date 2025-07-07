@@ -136,11 +136,192 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 1000;
-  display: none;
 }
 
-.sidebar.open + .sidebar-overlay {
+/* Responsive */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 75vw;
+    transform: translateX(-100%);
+    border-radius: 0;
+    padding: 20px 10px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-menu {
+    padding-left: 0;
+  }
+
+  .sidebar-menu a {
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .admin-box {
+    width: 100%;
+  }
+
+  .main-content {
+    padding: 10px;
+    margin-left: 0;
+  }
+
+  .main-content table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Hamburger Button */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1001;
+  background-color: #623986;
+  color: white;
+  font-size: 24px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background-color: #8F87F1;
+  color: white;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  transition: transform 0.3s ease;
+  z-index: 1002;
+}
+
+.sidebar-menu {
+  width: 100%;
+  padding-left: 20px;
+}
+
+.sidebar-menu ul {
+  list-style: none;
+}
+
+.sidebar-menu li {
+  margin-bottom: 10px;
+}
+
+.sidebar-menu a {
   display: block;
+  padding: 10px 20px;
+  background-color: #E9A5F1;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  background-color: #623986;
+}
+
+.admin-box {
+  background-color: #a170cc;
+  border-radius: 20px;
+  padding: 8px 10px;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.admin-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-role,
+.admin-email {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: white;
+}
+
+.logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.logo img {
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f6fa;
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Table inside main-content */
+.main-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.main-content table th,
+.main-content table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+/* Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
 }
 
 /* Responsive */
